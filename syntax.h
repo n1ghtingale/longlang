@@ -4,7 +4,8 @@
 typedef enum
 {
     IMMEDIATE,
-    BINARY_OPERATOR
+    BINARY_OPERATOR,
+    ASSIGNMENT
 } SyntaxType;
 
 
@@ -28,12 +29,19 @@ typedef struct BinaryExpression
     Syntax *right;
 } BinaryExpression;
 
+typedef struct Assignment
+{
+    char* var_name;
+    Syntax* expression;
+} Assignment;
+
 struct Syntax 
 {
     SyntaxType type;
     union {
         Immediate* immediate;
         BinaryExpression* binary_expression;
+        Assignment* assignment;
     };
 };
 
