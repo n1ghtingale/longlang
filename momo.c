@@ -15,7 +15,7 @@ void print(Stack *stackPtr){
 	// }
 	
 	while(!stack_empty(stackPtr)){
-		synNow = stack_pop(stackPtr);
+		synNow = (Syntax *) stack_pop(stackPtr);
 
 		switch(synNow->type){
 			case IMMEDIATE:
@@ -23,7 +23,6 @@ void print(Stack *stackPtr){
 				break;
 
 			case BINARY_OPERATOR:
-				//printf("*****%d", synNow->binary_expression->right->type);
 				printExpression(synNow->binary_expression->left);
 				switch(synNow->binary_expression->binary_type){
 					case ADDITION:
@@ -82,20 +81,11 @@ int main(){
 	Stack *s = stack_new();
 	Syntax *left = (Syntax*) immediate_new(3);
 	Syntax *right = (Syntax*) immediate_new(2);
-	Syntax *most = (Syntax*) immediate_new(1); 
+	Syntax *left_most = (Syntax*) immediate_new(1); 
 	Syntax *binary = (Syntax*)addition_new(left, right);
-	Syntax *binary2 = (Syntax*) addition_new(most, binary);
-	Syntax *tmp;
+	Syntax *binary2 = (Syntax*) addition_new(left_most, binary);
 
-	//printf("%d <<<\n", left->immediate->value);
-	stack_push(s, binary2);
-	tmp = stack_pop(s);
-	printf("%d\n====\n", tmp->immediate->value);
-
-	// printExpression(binary);
-	// printf("hello\n");
-	// printExpression(binary2);
-	// printf("\n");
+    stack_push(s, binary2);
 	print(s);
 	return 0;
 }
