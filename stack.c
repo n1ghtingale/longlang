@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include "stack.h"
+#include "syntax.h"
 
 Stack *stack_new()
 {
@@ -29,7 +30,7 @@ void stack_push(Stack *stack, void *item)
     stack->content[stack->size - 1] = item;
 }
 
-void *stack_pop(Stack *stack)
+void* stack_pop(Stack *stack)
 {
     if(stack->size >= 1){
         stack->size--;
@@ -37,6 +38,8 @@ void *stack_pop(Stack *stack)
         void *item = stack->content[stack->size];
         stack->content =
             realloc(stack->content, stack->size * sizeof *stack->content);
+        printf("(in pop) type = %d\n", ((Syntax*) item)->type);
+        printf("value %d\n", ((Syntax*) item)->binary_expression->left->immediate->value);
         return item;
     }
 }

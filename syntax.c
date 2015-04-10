@@ -24,7 +24,6 @@ Syntax* addition_new(Syntax *left, Syntax *right)
     Syntax *syntax = malloc(sizeof(Syntax));
     syntax->type = BINARY_OPERATOR;
     syntax->binary_expression = binary_syntax;
-
     return syntax;
 }
 
