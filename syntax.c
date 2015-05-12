@@ -27,7 +27,7 @@ Syntax* addition_new(Syntax *left, Syntax *right)
     return syntax;
 }
 
-Syntax* assignment_new(char* var_name, Syntax* expression)
+/*Syntax* assignment_new(char* var_name, Syntax* expression)
 {
     Assignment* assignment = malloc(sizeof(Assignment));
     assignment->var_name = var_name;
@@ -38,4 +38,4 @@ Syntax* assignment_new(char* var_name, Syntax* expression)
     syntax->assignment = assignment;
 
     return syntax;
-}
+}*/
