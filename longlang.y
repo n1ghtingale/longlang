@@ -23,40 +23,48 @@
 %% /* The grammar follows.  */
 
 //we look these grammar together
-EXP : CONST newL {
+EXP : CONST {
 			printf("case constant\n");   
 			Syntax *tmp_syntax = (Syntax*) immediate_new($1);
             stack_push(s, tmp_syntax);
           	print(s);
         }
          | EXP '+' EXP {
-            Syntax *right = stack_pop(s);
-            Syntax *left = stack_pop(s);
-            stack_push(s, addition_new(left, right));
+         	printf("case addition\n");
+            Syntax *right = (Syntax *) stack_pop(s);
+            Syntax *left = (Syntax *) stack_pop(s);
+
+            printf("left: %d\n", left->type);
+            printf("right: %d\n", right->type);
+            printf("before push");
+            stack_push(s, (Syntax *) addition_new(left, right));
+            printf("after push");
+            print(s);
+            printf("finish addition");
          }  
       
        | EXP '-' EXP {
-          Syntax *right = stack_pop(s);
-          Syntax *left = stack_pop(s);
-          stack_push(s, subtraction_new(left, right));
+          Syntax *right = (Syntax *) stack_pop(s);
+          Syntax *left = (Syntax *) stack_pop(s);
+          stack_push(s, (Syntax *) subtraction_new(left, right));
        }
 
        | EXP '*' EXP {
-          Syntax *right = stack_pop(s);
-          Syntax *left = stack_pop(s);
-          stack_push(s, multiplication_new(left, right));
+          Syntax *right = (Syntax *) stack_pop(s);
+          Syntax *left =  (Syntax *) stack_pop(s);
+          stack_push(s, (Syntax *) multiplication_new(left, right));
        }
 
        | EXP '/' EXP {
-         Syntax *right = stack_pop(s);
-          Syntax *left = stack_pop(s);
-          stack_push(s, division_new(left, right));
+         Syntax *right = (Syntax *) stack_pop(s);
+          Syntax *left = (Syntax *) stack_pop(s);
+          stack_push(s, (Syntax *) division_new(left, right));
        }
 
        | EXP '%' EXP {
-           Syntax *right = stack_pop(s);
-          Syntax *left = stack_pop(s);
-          stack_push(s, mod_new(left, right));
+           Syntax *right = (Syntax *) stack_pop(s);
+          Syntax *left = (Syntax *) stack_pop(s);
+          stack_push(s, (Syntax *) mod_new(left, right));
        } ;
 
 %%
