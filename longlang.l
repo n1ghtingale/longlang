@@ -1,10 +1,10 @@
 %option noyywrap
 %{
  #include<stdio.h>
- #include "calc.tab.h"
+ #include "longlang.tab.h"
 %}
 %%
-[\n]	{return 'newL';}
+[\n]	{return newL;}
 [+]	{return '+';}
 [-]	{return '-';}
 [*]	{return '*';}
@@ -13,13 +13,12 @@
 [=] {return '=';}
 
 
-"NOT"   {return not;}
 "SHOW"   {return show;}
-"SHOWH"   {return showh;}
+"SHOWH"   {return showH;}
 "TO"   {return to;}
 "==" 	{return eql;}
-"FOR"	{return for;}
-"IF" 	{return if;}
+"FOR"	{return FOR;}
+"IF" 	{return IF;}
 
 
 [A-Z]	{return var;}
@@ -28,7 +27,7 @@
 
 
 [0-9A-Fa-f]+h 	{yylval = strtol(yytext,NULL,16); return NUM;}
-[0-9]+ 	{yylval = atol(yytext); return NUM;}
+[0-9]+ 	{yylval = atoi(yytext); return CONST;}
 " " 	{ }
 . 	{ return wrong; }
 %%
