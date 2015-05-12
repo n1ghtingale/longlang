@@ -28,7 +28,36 @@ EXP : CONST newL {
 			Syntax *tmp_syntax = (Syntax*) immediate_new($1);
             stack_push(s, tmp_syntax);
           	print(s);
-        } ;
+        }
+         | EXP '+' EXP {
+            Syntax *right = stack_pop(s);
+            Syntax *left = stack_pop(s);
+            stack_push(s, addition_new(left, right));
+         }  
+      
+       | EXP '-' EXP {
+          Syntax *right = stack_pop(s);
+          Syntax *left = stack_pop(s);
+          stack_push(s, subtraction_new(left, right));
+       }
+
+       | EXP '*' EXP {
+          Syntax *right = stack_pop(s);
+          Syntax *left = stack_pop(s);
+          stack_push(s, multiplication_new(left, right));
+       }
+
+       | EXP '/' EXP {
+         Syntax *right = stack_pop(s);
+          Syntax *left = stack_pop(s);
+          stack_push(s, division_new(left, right));
+       }
+
+       | EXP '%' EXP {
+           Syntax *right = stack_pop(s);
+          Syntax *left = stack_pop(s);
+          stack_push(s, mod_new(left, right));
+       } ;
 
 %%
 
