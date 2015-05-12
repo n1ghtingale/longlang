@@ -39,3 +39,81 @@ Syntax* assignment_new(char* var_name, Syntax* expression)
 
     return syntax;
 }
+
+Syntax* subtraction_new(Syntax *left, Syntax *right)
+{
+    BinaryExpression *binary_syntax = malloc(sizeof(BinaryExpression));
+    binary_syntax->binary_type = SUBTRACTION;
+    binary_syntax->left = left;
+    binary_syntax->right = right;
+
+    Syntax *syntax = malloc(sizeof(Syntax));
+    syntax->type = BINARY_OPERATOR;
+    syntax->binary_expression = binary_syntax;
+    return syntax;
+}
+
+Syntax* multiplication_new(Syntax *left, Syntax *right)
+{
+    BinaryExpression *binary_syntax = malloc(sizeof(BinaryExpression));
+    binary_syntax->binary_type = MULTIPLICATION;
+    binary_syntax->left = left;
+    binary_syntax->right = right;
+
+    Syntax *syntax = malloc(sizeof(Syntax));
+    syntax->type = BINARY_OPERATOR;
+    syntax->binary_expression = binary_syntax;
+    return syntax;
+
+}
+Syntax* less_than_new(Syntax *left, Syntax *right)
+{
+    BinaryExpression *binary_syntax = malloc(sizeof(BinaryExpression));
+    binary_syntax->binary_type = LESS_THAN;
+    binary_syntax->left = left;
+    binary_syntax->right = right;
+
+    Syntax *syntax = malloc(sizeof(Syntax));
+    syntax->type = BINARY_OPERATOR;
+    syntax->binary_expression = binary_syntax;
+    return syntax;
+}
+
+Syntax* less_than_or_equal_new(Syntax *left, Syntax *right)
+{
+    BinaryExpression *binary_syntax = malloc(sizeof(BinaryExpression));
+    binary_syntax->binary_type = LESS_THAN_OR_EQUAL;
+    binary_syntax->left = left;
+    binary_syntax->right = right;
+
+    Syntax *syntax = malloc(sizeof(Syntax));
+    syntax->type = BINARY_OPERATOR;
+    syntax->binary_expression = binary_syntax;
+    return syntax;
+}
+
+Syntax* mod_new(Syntax *left, Syntax *right)
+{
+    BinaryExpression *binary_syntax = malloc(sizeof(BinaryExpression));
+    binary_syntax->binary_type = MOD;
+    binary_syntax->left = left;
+    binary_syntax->right = right;
+
+    Syntax *syntax = malloc(sizeof(Syntax));
+    syntax->type = BINARY_OPERATOR;
+    syntax->binary_expression = binary_syntax;
+    return syntax;
+}
+
+Syntax* division_new(Syntax *left, Syntax *right)
+{
+    BinaryExpression *binary_syntax = malloc(sizeof(BinaryExpression));
+    binary_syntax->binary_type = DIVISION;
+    binary_syntax->left = left;
+    binary_syntax->right = right;
+
+    Syntax *syntax = malloc(sizeof(Syntax));
+    syntax->type = BINARY_OPERATOR;
+    syntax->binary_expression = binary_syntax;
+    return syntax;
+}
