@@ -5,7 +5,6 @@
 %}
 %%
 [\n]	{return 'newL';}
-[\]	{ }
 [+]	{return '+';}
 [-]	{return '-';}
 [*]	{return '*';}
