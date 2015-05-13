@@ -56,9 +56,11 @@ void write_syntax(FILE *out, Syntax *syntax){
 	} else if (syntax->type == BINARY_OPERATOR){
 		BinaryExpression *binary_syntax = syntax->binary_expression;
 		//reserve space for temporary 
-		emit_instr(out, "sub", "$4, %esp");
 		write_syntax(out, binary_syntax->left);
+
+		emit_instr(out, "sub", "$4, %esp");
 		emit_instr(out, "mov", "%eax, 0(%esp)");
+		
 		write_syntax(out, binary_syntax->right);
 		
 		if(binary_syntax->binary_type == MULTIPLICATION){
@@ -72,9 +74,7 @@ void write_syntax(FILE *out, Syntax *syntax){
 		    emit_instr(out, "add", "$4, %esp");
 		} else if (binary_syntax->binary_type == SUBTRACTION) {
 		    emit_instr(out, "sub", "%eax, 0(%esp)");
-		    //emit_instr(out, "sub", "%eax, %ebx");
             	    emit_instr(out, "mov", "0(%esp), %eax");
-            	    //emit_instr(out, "mov", "%ebx, %eax");
 		    emit_instr(out, "add", "$4, %esp");
 		}
 	}
