@@ -39,6 +39,12 @@ void* stack_pop(Stack *stack)
         stack->content =
             realloc(stack->content, stack->size * sizeof *stack->content);
 
+       //     if()
+         //   printf("value left: %d", ((Syntax *) item)->binary_expression->left->immediate->value);
+         //   printf("value right: %d", ((Syntax *) item)->binary_expression->right->immediate->value);
+       // printf("value: %d", ((Syntax *) item)->binary_expression->left->value);
+
+
         return item;
     }
 }
