@@ -37,23 +37,9 @@ typedef struct BinaryExpression
 
 typedef struct Assignment
 {
-    char* var_name;
+    int var_num;
     Syntax* expression;
 } Assignment;
-
-struct Syntax 
-{
-    SyntaxType type;
-    union {
-        Immediate* immediate;
-        BinaryExpression* binary_expression;
-        Assignment* assignment;
-        IfStatement *if_statement;
-        ShowStatement *show_statement;
-        Minus *minus;
-        ForStatement for_statement;
-    };
-};  
 
 typedef struct ForStatement{
     Syntax* startNum;
@@ -75,5 +61,21 @@ typedef struct ShowStatement {
 typedef struct Minus {
     Syntax* expression;
 }Minus;
+
+struct Syntax 
+{
+    SyntaxType type;
+    union {
+        Immediate* immediate;
+        BinaryExpression* binary_expression;
+        Assignment* assignment;
+        IfStatement *if_statement;
+        ShowStatement *show_statement;
+        Minus *minus;
+        ForStatement* for_statement;
+    };
+};  
+
+
 #endif
 

@@ -14,7 +14,7 @@ Syntax* immediate_new(int value)
     return syntax;
 }
 
-Syntax *if_new(Syntax im1,Syntax im2, Syntax *then) {
+Syntax *if_new(Syntax* im1,Syntax* im2, Syntax *then) {
     IfStatement *if_statement = malloc(sizeof(IfStatement));
     if_statement->immediate1 = im1;
     if_statement->immediate2 = im2;
@@ -52,7 +52,7 @@ Syntax* minus_new(Syntax *express)
 
 Syntax* for_new(Syntax *start,Syntax *stop,Syntax* express)
 {
-    ForStatement *for_statement = malloc(sizeof(ForStatement));
+    ForStatement * for_statement = malloc(sizeof(ForStatement));
     for_statement->expression = express ;
     for_statement->startNum = stop;
     for_statement->stopNum = start ;
@@ -62,6 +62,7 @@ Syntax* for_new(Syntax *start,Syntax *stop,Syntax* express)
     syntax->for_statement = for_statement;
     return syntax;
 }
+
 Syntax* addition_new(Syntax *left, Syntax *right)
 {
     BinaryExpression *binary_syntax = malloc(sizeof(BinaryExpression));
@@ -78,9 +79,10 @@ Syntax* addition_new(Syntax *left, Syntax *right)
 Syntax* assignment_new(int var_num, Syntax* expression)
 {
     Assignment* assignment = malloc(sizeof(Assignment));
-    assignment->var_name = var_name;
+    assignment->var_num = var_num;
     assignment->expression = expression;
     Syntax* syntax = malloc(sizeof(Syntax));
+
     syntax->type = ASSIGNMENT;
     syntax->assignment = assignment;
     return syntax;

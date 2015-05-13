@@ -4,8 +4,12 @@
   #include <stdio.h>
   #include "syntax.h"
   #include "stack.h"
+
   
   int variable[26];
+
+  #include "assembly.h"
+
 
   Stack *s;
   void yyerror (char const *);
@@ -16,49 +20,56 @@
 // declare token
 /* Bison declarations.  */
 //%define api.value.type {long long} // change double to long long 
-%token LINE STMT CONST EXE IFSTMT FORSTMT NEWL SHOW SHOWH VAR TO EQL FOR IF NUM WRONG
+%token NEWL SHOW SHOWH VAR TO EQL FOR IF NUM WRONG
 %left '-' '+' // left association (reduce left first)
 %left '*' '/' '%' // \ is control character 
 // deepest is the most important 
 
 
 %% /* The grammar follows.  */
-
+STMT : LINE NEWL | IFSTMT NEWL | FORSTMT | EXP;
 
 //we look these grammar together
 LINE : NEWL 
-	| VAR '=' EXP NEWL {
+	| VAR '=' EXP  {
+			printf("case assignment\n");
 		Syntax *exp_to_push = (Syntax *) stack_pop(s);
-	    stack_push(s, assignment_new($1, exp_to_push));
+		Syntax *ass_to_push = (Syntax*)assignment_new($1, exp_to_push);
+	    stack_push(s, ass_to_push);
 	}
-	| SHOW VAR NEWL{
+	| SHOW VAR {
 		// keep index
+			printf("case show\n");
 		Syntax *tmp_var = (Syntax *) stack_pop(s);
 		Syntax *show_to_push = (Syntax*) show_new('d',tmp_var);
 		stack_push(s, show_to_push);
 	}
-	| SHOWH VAR NEWL{
+	| SHOWH VAR {
+			printf("case showH\n");
 		// keep index
 		Syntax *tmp_var = (Syntax *) stack_pop(s);
 		Syntax *show_to_push = (Syntax*) show_new('h',tmp_var);
 		stack_push(s, show_to_push);
-	} ;
+	} 
+	
+;
 
-IFSTMT : IF '(' CONST EQL CONST ')' LINE {
+IFSTMT :  IF '(' CONST EQL CONST ')' LINE {
+		printf("case if\n");
 	Syntax *then = (Syntax *) stack_pop(s);
 	Syntax *tmp_syntax2 = (Syntax*)stack_pop(s);
 	Syntax *tmp_syntax1 = (Syntax*)stack_pop(s);
 	Syntax *tmp_syntax_push = (Syntax*) if_new(tmp_syntax1,tmp_syntax2,then);
 	stack_push(s, tmp_syntax_push);
 };
-
 FORSTMT : FOR '(' NUM TO NUM ')' LINE {
+		printf("case for\n");
 	Syntax *to_do = (Syntax*)stack_pop(s);
 	Syntax *stop_num = (Syntax*)stack_pop(s);
 	Syntax *start_num = (Syntax*)stack_pop(s);
 	Syntax *for_push = (Syntax*) for_new(start_num,stop_num,to_do);
 	stack_push(s,for_push);
-}
+};
 EXP : CONST {
 			printf("case constant\n");   
 			Syntax *tmp_syntax = (Syntax*) immediate_new($1);
@@ -74,36 +85,42 @@ EXP : CONST {
          }  
 
        | EXP '-' EXP {
+       		printf("case -\n");
           Syntax *right = (Syntax *) stack_pop(s);
           Syntax *left = (Syntax *) stack_pop(s);
           stack_push(s, (Syntax *) subtraction_new(left, right));
        }
 
        | EXP '*' EXP {
+       		printf("case multiply\n");
           Syntax *right = (Syntax *) stack_pop(s);
           Syntax *left =  (Syntax *) stack_pop(s);
           stack_push(s, (Syntax *) multiplication_new(left, right));
-       	  print(s);
+       	 // print(s);
        }
 
        | EXP '/' EXP {
+       		printf("case division\n");
          Syntax *right = (Syntax *) stack_pop(s);
           Syntax *left = (Syntax *) stack_pop(s);
           stack_push(s, (Syntax *) division_new(left, right));
        }
 
        | EXP '%' EXP {
+       		printf("case mod\n");
            Syntax *right = (Syntax *) stack_pop(s);
           Syntax *left = (Syntax *) stack_pop(s);
           stack_push(s, (Syntax *) mod_new(left, right));
        } ;
 
        | '-' EXP {
+       		printf("case minus\n");
        		Syntax *expression_push = (Syntax *) stack_pop(s);
        		stack_push(s, (Syntax *) minus_new(expression_push));
        }
 
        | '(' EXP ')'{
+       		printf("case parenthesis\n");
 
        };
  
@@ -115,7 +132,7 @@ EXP : CONST {
 		 | NUM {
 		 	Syntax *tmp_syntax = (Syntax*) immediate_new($1);
 		 	stack_push(s, tmp_syntax);
-
+		 	printf("hello num\n");
 		 };
 
 
@@ -202,4 +219,6 @@ void main(){
 	printf(">hello longlang>\n");
 	s = stack_new();
 	yyparse();
+	print(s);	
+//	write_assembly((Syntax *) stack_pop(s));
 }
