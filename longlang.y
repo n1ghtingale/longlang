@@ -34,8 +34,7 @@ EXP : CONST {
             Syntax *right = (Syntax *) stack_pop(s);
             Syntax *left = (Syntax *) stack_pop(s);
 
-            printf("left: %d\n", left->type);
-            printf("right: %d\n", right->type);
+          
             printf("before push");
             stack_push(s, (Syntax *) addition_new(left, right));
             printf("after push");

@@ -23,13 +23,13 @@ void print(Stack *stackPtr){
 		printf("start to check\n");
 		switch(synNow->type){
 			printf("in switch case in Print function\n");
-			case IMMEDIATE:
+			case 0:
 				printf("%d",synNow->immediate->value);
 				Syntax *to_push = (Syntax*) immediate_new(synNow->immediate->value);
 				stack_push(saveOld,(Syntax*)to_push);
 				break;
 
-			case BINARY_OPERATOR:
+			case 1:
 				stack_push(saveOld, (Syntax *) addition_new(synNow->binary_expression->left, synNow->binary_expression->right));
 
 				printExpression(synNow->binary_expression->left);
@@ -47,7 +47,7 @@ void print(Stack *stackPtr){
 				printExpression(synNow->binary_expression->right);
 				break;
 
-			case ASSIGNMENT:
+			case 2:
 				printf("%s",synNow->assignment->var_name);
 				printf("=");
 
@@ -64,11 +64,11 @@ void printExpression(Syntax *ss){
 	switch(ss->type){
 		printf("in switch");
 		
-			case IMMEDIATE:
+			case 0:
 				printf("%d",ss->immediate->value);
 				break;
 
-			case BINARY_OPERATOR:
+			case 1:
 				printExpression(ss->binary_expression->left);
 				switch(ss->binary_expression->binary_type){
 					case ADDITION:
@@ -84,7 +84,7 @@ void printExpression(Syntax *ss){
 				printExpression(ss->binary_expression->right);
 				break;
 
-			case ASSIGNMENT:
+			case 2:
 				printf("%s",ss->assignment->var_name);
 				printf("=");
 
@@ -95,13 +95,15 @@ void printExpression(Syntax *ss){
 int main(){
 	Stack* s = stack_new();
 	Syntax *left = (Syntax*) immediate_new(3);
-	Syntax *right = (Syntax*) immediate_new(2);
-	//Syntax *left_most = (Syntax*) immediate_new(1); 
-	Syntax *binary = (Syntax*)addition_new(left, right);
-	//Syntax *binary2 = (Syntax*) addition_new(left_most, binary);
+	 Syntax *right = (Syntax*) immediate_new(2);
+	// //Syntax *left_most = (Syntax*) immediate_new(1); 
+	 Syntax *binary = (Syntax*)addition_new(left, right);
+	// //Syntax *binary2 = (Syntax*) addition_new(left_most, binary);
 
     stack_push(s,(Syntax*)binary);
 	print(s);
-	printf("dadada");
+	// //	printf("%d",left->immediate->value);
+	//printf("dadada");
+	
 	return 0;
 }
