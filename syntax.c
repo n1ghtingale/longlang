@@ -14,6 +14,54 @@ Syntax* immediate_new(int value)
     return syntax;
 }
 
+Syntax *if_new(Syntax im1,Syntax im2, Syntax *then) {
+    IfStatement *if_statement = malloc(sizeof(IfStatement));
+    if_statement->immediate1 = im1;
+    if_statement->immediate2 = im2;
+    if_statement->then = then;
+
+    Syntax *syntax = malloc(sizeof(Syntax));
+    syntax->type = IF_STATEMENT;
+    syntax->if_statement = if_statement;
+
+    return syntax;
+}
+
+Syntax* show_new(char doh,Syntax *varR)
+{
+    ShowStatement *show_statement = malloc(sizeof(ShowStatement));
+    show_statement->decOrHex = doh;
+    show_statement->var = varR;
+
+    Syntax *syntax = malloc(sizeof(Syntax));
+    syntax->type = SHOW_STATEMENT;
+    syntax->show_statement = show_statement;
+    return syntax;
+}
+
+Syntax* minus_new(Syntax *express)
+{
+    Minus *minus = malloc(sizeof(Minus));
+    minus->expression = express ;
+
+    Syntax *syntax = malloc(sizeof(Syntax));
+    syntax->type = MINUS;
+    syntax->minus = minus;
+    return syntax;
+}
+
+Syntax* for_new(Syntax *start,Syntax *stop,Syntax* express)
+{
+    ForStatement *for_statement = malloc(sizeof(ForStatement));
+    for_statement->expression = express ;
+    for_statement->startNum = stop;
+    for_statement->stopNum = start ;
+
+    Syntax *syntax = malloc(sizeof(Syntax));
+    syntax->type = FOR_STATEMENT;
+    syntax->for_statement = for_statement;
+    return syntax;
+}
 Syntax* addition_new(Syntax *left, Syntax *right)
 {
     BinaryExpression *binary_syntax = malloc(sizeof(BinaryExpression));
@@ -27,7 +75,7 @@ Syntax* addition_new(Syntax *left, Syntax *right)
     return syntax;
 }
 
-Syntax* assignment_new(char* var_name, Syntax* expression)
+Syntax* assignment_new(int var_num, Syntax* expression)
 {
     Assignment* assignment = malloc(sizeof(Assignment));
     assignment->var_name = var_name;
@@ -115,3 +163,5 @@ Syntax* division_new(Syntax *left, Syntax *right)
     syntax->binary_expression = binary_syntax;
     return syntax;
 }
+
+
