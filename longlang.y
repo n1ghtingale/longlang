@@ -47,7 +47,6 @@ EXP : CONST {
           Syntax *right = (Syntax *) stack_pop(s);
           Syntax *left =  (Syntax *) stack_pop(s);
           stack_push(s, (Syntax *) multiplication_new(left, right));
-       	  print(s);
        }
 
        | EXP '/' EXP {
