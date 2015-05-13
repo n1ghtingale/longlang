@@ -67,6 +67,13 @@ void write_syntax(FILE *out, Syntax *syntax){
 		    emit_instr(out, "mull", "0(%esp)");
 		    //emit_instr(out, "mull", "%ebx");
 		    emit_instr(out, "add", "$4, %esp");
+		} else if (binary_syntax->binary_type == DIVISION) {
+		    //edx:eax / 0(%esp)
+	            emit_instr(out, "mov", "$0, %edx");
+	            emit_instr(out, "xchg", "0(%esp), %eax");
+	            emit_instr(out, "divl", "0(%esp)");
+
+		    emit_instr(out, "add", "$4, %esp");
 		} else if (binary_syntax->binary_type == ADDITION){
 		    emit_instr(out, "add", "0(%esp), %eax");
 		    //emit_instr(out, "add", "%ebx, %eax");
