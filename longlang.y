@@ -4,6 +4,7 @@
   #include <stdio.h>
   #include "syntax.h"
   #include "stack.h"
+  #include "assembly.h"
 
   Stack *s;
   void yyerror (char const *);
@@ -143,4 +144,5 @@ void main(){
 	printf(">hello longlang>\n");
 	s = stack_new();
 	yyparse();
+	write_assembly((Syntax *) stack_pop(s));
 }
