@@ -27,20 +27,13 @@ EXP : CONST {
 			printf("case constant\n");   
 			Syntax *tmp_syntax = (Syntax*) immediate_new($1);
             stack_push(s, tmp_syntax);
-          	print(s);
+          	//print(s);
         }
          | EXP '+' EXP {
          	printf("case addition\n");
             Syntax *right = (Syntax *) stack_pop(s);
             Syntax *left = (Syntax *) stack_pop(s);
-
-            printf("left: %d\n", left->type);
-            printf("right: %d\n", right->type);
-            printf("before push");
-            stack_push(s, (Syntax *) addition_new(left, right));
-            printf("after push");
-            print(s);
-            printf("finish addition");
+            stack_push(s, (Syntax *) addition_new(left, right)); 
          }  
       
        | EXP '-' EXP {
@@ -53,6 +46,7 @@ EXP : CONST {
           Syntax *right = (Syntax *) stack_pop(s);
           Syntax *left =  (Syntax *) stack_pop(s);
           stack_push(s, (Syntax *) multiplication_new(left, right));
+       	  print(s);
        }
 
        | EXP '/' EXP {

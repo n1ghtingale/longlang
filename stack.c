@@ -39,8 +39,6 @@ void* stack_pop(Stack *stack)
         stack->content =
             realloc(stack->content, stack->size * sizeof *stack->content);
 
-        printf("value: %d", ((Syntax *) item)->immediate->value);
-
         return item;
     }
 }

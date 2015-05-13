@@ -5,12 +5,23 @@ void yyerror(char *);
 #include <string.h>
 %}
 
-%token num
+%token num LINE var EXP STMT newL
 %left PLUS
 
 %%
-input:
-  num PLUS num {}
+LINE:
+    newL
+    | STMT newL
+;
+EXP:
+   CONST
+   | EXP + EXP
+;
+CONST:
+     var | num
+;
+STMT:
+    EXP
 ;
 
 %%
