@@ -71,10 +71,11 @@ FORSTMT : FOR '(' NUM TO NUM ')' LINE {
 	stack_push(s,for_push);
 };
 EXP : CONST {
-			printf("case constant\n");   
-			Syntax *tmp_syntax = (Syntax*) immediate_new($1);
-            stack_push(s, tmp_syntax);
-          	//print(s);
+	    //printf("case constant\n");   
+	    //Syntax *tmp_syntax = (Syntax*) immediate_new($1);
+            //stack_push(s, tmp_syntax);
+            //printf("value: %d\n", tmp_syntax->immediate->value);
+            //print(s);
         }
          | EXP '+' EXP {
          	printf("case addition\n");
@@ -123,16 +124,17 @@ EXP : CONST {
 
        };
  
- CONST : VAR {
- 			Syntax *tmp_syntax = (Syntax*) immediate_new($1);
+ 	CONST : VAR {
+ 		Syntax *tmp_syntax = (Syntax*) immediate_new($1);
  			stack_push(s, tmp_syntax);
-		 }
+	}
 
-		 | NUM {
-		 	Syntax *tmp_syntax = (Syntax*) immediate_new($1);
-		 	stack_push(s, tmp_syntax);
-		 	printf("hello num\n");
-		 };
+	 | NUM {
+	 	Syntax *tmp_syntax = (Syntax*) immediate_new($1);
+	 	printf("value: %d\n", tmp_syntax->immediate->value);
+	 	stack_push(s, tmp_syntax);
+	 	printf("hello num\n");
+	};
 
 
 
@@ -218,6 +220,6 @@ void main(){
 	printf(">hello longlang>\n");
 	s = stack_new();
 	yyparse();
-	print(s);	
+	//print(s);	
 	write_assembly((Syntax *) stack_pop(s));
 }
