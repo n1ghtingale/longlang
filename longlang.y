@@ -71,10 +71,10 @@ FORSTMT : FOR '(' NUM TO NUM ')' LINE {
 	stack_push(s,for_push);
 };
 EXP : CONST {
-			printf("case constant\n");   
-			Syntax *tmp_syntax = (Syntax*) immediate_new($1);
-            stack_push(s, tmp_syntax);
-          	//print(s);
+			// printf("case constant\n");   
+			// Syntax *tmp_syntax = (Syntax*) immediate_new($1);
+		   //          stack_push(s, tmp_syntax);
+		   //        	//print(s);
         }
          | EXP '+' EXP {
          	printf("case addition\n");
