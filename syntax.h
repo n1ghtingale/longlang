@@ -13,15 +13,15 @@ typedef enum
 } SyntaxType;
 
 
-typedef struct Immediate { int value; } Immediate;
+typedef struct Immediate { 
+    int value; 
+} Immediate;
 
 typedef enum
 {
     ADDITION,
     SUBTRACTION,
     MULTIPLICATION,
-    LESS_THAN,
-    LESS_THAN_OR_EQUAL,
     DIVISION,
     MOD,
 } BinaryExpressionType;
