@@ -98,7 +98,7 @@ void write_syntax(FILE *out, Syntax *syntax){
 		    emit_instr(out, "add", "$4, %esp");
 		} else if (binary_syntax->binary_type == SUBTRACTION) {
 		    emit_instr(out, "sub", "%eax, 0(%esp)");
-            	    emit_instr(out, "mov", "0(%esp), %eax");
+           	emit_instr(out, "mov", "0(%esp), %eax");
 		    emit_instr(out, "add", "$4, %esp");
 		}
 	} else if (syntax->type == ASSIGNMENT) {
@@ -125,6 +125,10 @@ void write_syntax(FILE *out, Syntax *syntax){
             }
 	} else {
 	    printf("last case\n");
+	}
+	else if(syntax->type = MINUS){
+		write_syntax(out,syntax->expression);
+		emit_instr(out, "sub", "0(%esp), %eax");
 	}
 }
 

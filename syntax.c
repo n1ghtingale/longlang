@@ -188,5 +188,3 @@ Syntax *input_new(List *lines) {
 
     return syntax;
 }
-
-
