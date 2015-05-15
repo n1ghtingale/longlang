@@ -106,30 +106,30 @@ void write_syntax(FILE *out, Syntax *syntax){
 	    write_syntax(out, syntax->assignment->expression);
 
 	    emit_instr_format(out, "mov", "%%eax, -%d(%%ebp)", 4*(syntax->assignment->var_index+1));
-	} else if (syntax->type = SHOW_STATEMENT){
+	} else if (syntax->type == SHOW_STATEMENT){
 	    printf("case get SHOW statement");
 	    if(syntax->show_statement->decOrHex == 'd'){
-	    	emit_instr_format(out, "pushl", "%%eax, -%d(%%ebp)", 4*(syntax->show_statement->var->variable->var_index+1));
-	    	emit_instr(out, "pushl", "$format");
+	    	emit_instr_format(out, "pushl", "-%d(%%ebp)", 4*(syntax->show_statement->var->variable->var_index+1));
+	    	emit_instr(out, "pushl", "$LC0");
         	emit_instr(out, "call", "_printf");
 	    } else if (syntax->show_statement->decOrHex == 'h') {
 
 	    }
-	} else if (syntax->type = INPUT) {
-	    printf("gen INPUT\n");
+	} else if (syntax->type == INPUT) {
+	    //printf("gen INPUT\n");
 	    List *lines = syntax->input->lines;
 	    int i;
-            for (i = 0; i < list_length(lines); i++) {
-            	printf("*");
+            for (i = list_length(lines)-1; i >= 0; i--) {
+            	//printf("*");
                 write_syntax(out, list_get(lines, i));
             }
 	} else {
 	    printf("last case\n");
 	}
-	else if(syntax->type = MINUS){
+	/*else if(syntax->type = MINUS){
 		write_syntax(out,syntax->expression);
 		emit_instr(out, "sub", "0(%esp), %eax");
-	}
+	}*/
 }
 
 void write_assembly(Syntax *syntax){

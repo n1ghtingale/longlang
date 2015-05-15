@@ -240,9 +240,17 @@ void printExpression(Syntax *ss){
 
  
 void main(){
+	Syntax *test_bug;
+	
 	printf(">hello longlang>\n");
 	s = stack_new();
 	yyparse();
-	//print(s);	
+	//print(s);
+	test_bug = (Syntax *) stack_pop(s);
+        printf("length: %d\n", list_length(test_bug->input->lines));
+        printf("type:%d \n", test_bug->type);
+        printf("length: %d\n", list_length(test_bug->input->lines));
+        printf("type:%d \n", test_bug->type);
+        stack_push(s, test_bug);
 	write_assembly((Syntax *) stack_pop(s));
 }
