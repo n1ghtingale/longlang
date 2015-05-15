@@ -50,8 +50,31 @@ STMT : LINE NEWL {
             list_push(input_syntax->input->lines, line);
             stack_push(s, input_syntax);
  	}
-	| IFSTMT NEWL 
-	| FORSTMT NEWL;
+	| IFSTMT NEWL {
+	    printf("case IF\n");
+	    printf("case line\n");
+ 	    Syntax *input_syntax;
+ 	    Syntax *line;
+ 	    line = (Syntax *) stack_pop(s);
+ 	    
+ 	    if(stack_empty(s)){
+ 	    	printf("empty stack\n");
+ 	    	input_syntax = (Syntax *) input_new(list_new());
+ 	    }
+            else if (((Syntax *) stack_peek(s))->type == INPUT) {
+            	printf("top isn't input\n");
+            	input_syntax = (Syntax *) stack_pop(s);
+            } else {
+            	printf("line error\n");
+            }
+            printf("input_syntax->type%d\n", input_syntax->type);
+            printf("line->type: %d\n", line->type);
+            list_push(input_syntax->input->lines, line);
+            stack_push(s, input_syntax);
+	}
+	| FORSTMT NEWL {
+	    printf("case FOR\n");
+	};
 
 //we look these grammar together
 LINE :	VAR '=' EXP {
@@ -78,12 +101,18 @@ LINE :	VAR '=' EXP {
 ;
 
 IFSTMT :  IF '(' CONST EQL CONST ')' LINE {
-	    printf("case if\n");
-	    Syntax *then = (Syntax *) stack_pop(s);
-	    Syntax *tmp_syntax2 = (Syntax*)stack_pop(s);
-	    Syntax *tmp_syntax1 = (Syntax*)stack_pop(s);
-	    Syntax *tmp_syntax_push = (Syntax*) if_new(tmp_syntax1,tmp_syntax2,then);
-	    stack_push(s, tmp_syntax_push);
+	    Syntax *then;
+	    Syntax *left;
+	    Syntax *right;
+	    Syntax *if_syntax;
+	    Syntax *cond;
+	    
+	    then = (Syntax *) stack_pop(s);
+	    left = (Syntax *) stack_pop(s);
+	    right = (Syntax *) stack_pop(s);
+	    cond = (Syntax *) comparision_new(left, right);
+	    if_syntax =  (Syntax *) if_new(cond, then);
+	    stack_push(s,if_syntax);
 	};
 FORSTMT : FOR '(' NUM TO NUM ')' LINE {
 	    printf("case for\n");
@@ -149,6 +178,7 @@ EXP : CONST {
  	CONST : VAR {
  	    printf("case var\n");
  	    Syntax *tmp_syntax = (Syntax*) variable_new($1);
+ 	    printf("create node finish\n");
  	    stack_push(s, tmp_syntax);
 	}
 

@@ -31,7 +31,8 @@ typedef enum
     SUBTRACTION,
     MULTIPLICATION,
     DIVISION,
-    MOD
+    MOD,
+    COMPARISION
 } BinaryExpressionType;
 
 typedef struct Syntax Syntax;
@@ -56,8 +57,7 @@ typedef struct ForStatement{
 } ForStatement;
 
 typedef struct IfStatement {
-    Syntax* immediate1;
-    Syntax* immediate2;
+    Syntax *condition;
     Syntax *then;
 } IfStatement;
 

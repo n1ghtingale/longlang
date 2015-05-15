@@ -26,10 +26,9 @@ Syntax *variable_new(int var_index) {
     return syntax;
 }
 
-Syntax *if_new(Syntax* im1,Syntax* im2, Syntax *then) {
+Syntax *if_new(Syntax* cond, Syntax *then) {
     IfStatement *if_statement = malloc(sizeof(IfStatement));
-    if_statement->immediate1 = im1;
-    if_statement->immediate2 = im2;
+    if_statement->condition = cond; 
     if_statement->then = then;
 
     Syntax *syntax = malloc(sizeof(Syntax));
@@ -125,6 +124,20 @@ Syntax* multiplication_new(Syntax *left, Syntax *right)
     syntax->binary_expression = binary_syntax;
     return syntax;
 
+}
+
+Syntax* comparision_new(Syntax *left, Syntax *right)
+{
+    BinaryExpression *binary_syntax = malloc(sizeof(BinaryExpression));
+    binary_syntax->binary_type = COMPARISION;
+    binary_syntax->left = left;
+    binary_syntax->right = right;
+
+    Syntax *syntax = malloc(sizeof(Syntax));
+    syntax->type = BINARY_OPERATOR;
+    syntax->binary_expression = binary_syntax;
+
+    return syntax;
 }
 
 Syntax* mod_new(Syntax *left, Syntax *right)
