@@ -55,11 +55,15 @@ void write_footer(FILE *out){
 }
 
 void write_syntax(FILE *out, Syntax *syntax){
+	printf("write_syntax\n");
 	if(syntax->type == IMMEDIATE){
+	    printf("case gen immediate\n");
 	    emit_instr_format(out, "mov", "$%d, %%eax", syntax->immediate->value);
 	} else if (syntax->type == VARIABLE) {
+	    printf("case gen var\n");
             emit_instr_format(out, "mov", "-%%d(%ebp), %eax", 4*(syntax->variable->var_index+1));
 	} else if (syntax->type == BINARY_OPERATOR){
+		printf("case gen binary\n");
 		BinaryExpression *binary_syntax = syntax->binary_expression;
 		//reserve space for temporary 
 		write_syntax(out, binary_syntax->left);
@@ -98,10 +102,12 @@ void write_syntax(FILE *out, Syntax *syntax){
 		    emit_instr(out, "add", "$4, %esp");
 		}
 	} else if (syntax->type == ASSIGNMENT) {
+	    printf("case gen assignment\n");
 	    write_syntax(out, syntax->assignment->expression);
 
 	    emit_instr_format(out, "mov", "%%eax, -%d(%%ebp)", 4*(syntax->assignment->var_index+1));
 	} else if (syntax->type = SHOW_STATEMENT){
+	    printf("case get SHOW statement");
 	    if(syntax->show_statement->decOrHex == 'd'){
 	    	emit_instr_format(out, "pushl", "%%eax, -%d(%%ebp)", 4*(syntax->show_statement->var->variable->var_index+1));
 	    	emit_instr(out, "pushl", "$format");
@@ -109,6 +115,16 @@ void write_syntax(FILE *out, Syntax *syntax){
 	    } else if (syntax->show_statement->decOrHex == 'h') {
 
 	    }
+	} else if (syntax->type = INPUT) {
+	    printf("gen INPUT\n");
+	    List *lines = syntax->input->lines;
+	    int i;
+            for (i = 0; i < list_length(lines); i++) {
+            	printf("*");
+                write_syntax(out, list_get(lines, i));
+            }
+	} else {
+	    printf("last case\n");
 	}
 }
 

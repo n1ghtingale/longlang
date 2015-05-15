@@ -1,11 +1,14 @@
 #ifndef LONGLANG_SYNTAX_HEADER
 #define LONGLANG_SYNTAX_HEADER
 
+#include "list.h"
+
 typedef enum
 {
     IMMEDIATE,
     VARIABLE,
     BINARY_OPERATOR,
+    INPUT,
     ASSIGNMENT,
     IF_STATEMENT,
     SHOW_STATEMENT,
@@ -67,6 +70,9 @@ typedef struct Minus {
     Syntax* expression;
 }Minus;
 
+typedef struct Input { List *lines; } Input;
+
+
 struct Syntax 
 {
     SyntaxType type;
@@ -79,9 +85,9 @@ struct Syntax
         Minus *minus;
         ForStatement* for_statement;
         Variable *variable;
+        Input *input;
     };
-};  
-
+};
 
 #endif
 

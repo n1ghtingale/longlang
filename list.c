@@ -57,7 +57,8 @@ void *list_get(List *list, int index) { return list->items[index]; }
 
 void list_set(List *list, int index, void *value) {
     if (index < 0 || index > list->size) {
-        warnx("Index %d is out of bounds!", index);
+        printf("out of bound\n");
+        exit(-1);
     }
 
     else if (index == list->size) {

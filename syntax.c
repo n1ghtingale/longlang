@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "syntax.h"
+#include "list.h"
 
 Syntax* immediate_new(int value)
 {
@@ -174,6 +175,17 @@ Syntax* division_new(Syntax *left, Syntax *right)
     Syntax *syntax = malloc(sizeof(Syntax));
     syntax->type = BINARY_OPERATOR;
     syntax->binary_expression = binary_syntax;
+    return syntax;
+}
+
+Syntax *input_new(List *lines) {
+    Input *input = malloc(sizeof(Input));
+    input->lines = lines;
+
+    Syntax *syntax = malloc(sizeof(Syntax));
+    syntax->type = INPUT;
+    syntax->input = input;
+
     return syntax;
 }
 

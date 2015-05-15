@@ -23,14 +23,28 @@
 %token NEWL SHOW SHOWH VAR TO EQL FOR IF NUM WRONG
 %left '-' '+' // left association (reduce left first)
 %left '*' '/' '%' // \ is control character 
+
 // deepest is the most important 
 
 
 %% /* The grammar follows.  */
-STMT :  %empty | LINE NEWL | IFSTMT NEWL | FORSTMT | EXP | NEWL;
+input: | STMT input;
+STMT : LINE NEWL {printf("case multiple line\n");
+ 	    Syntax *input_syntax;
+ 	    Syntax *line = (Syntax *) stack_pop(s);
+            if (((Syntax *)stack_peek(s))->type != INPUT) {
+                input_syntax = input_new(list_new());
+            } else {
+                input_syntax = stack_pop(s);
+            }
+            list_push(input_syntax->input->lines, line);
+            stack_push(s, input_syntax);
+ 	}
+	| IFSTMT NEWL 
+	| FORSTMT NEWL;
 
 //we look these grammar together
-LINE :	VAR '=' EXP  {
+LINE :	VAR '=' EXP {
 	    printf("case assignment\n");
 	    Syntax *exp_to_push = (Syntax *) stack_pop(s);
 	    Syntax *ass_to_push = (Syntax*)assignment_new($1, exp_to_push);
