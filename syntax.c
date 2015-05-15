@@ -14,6 +14,17 @@ Syntax* immediate_new(int value)
     return syntax;
 }
 
+Syntax *variable_new(int var_index) {
+    Variable *variable = malloc(sizeof(Variable));
+    variable->var_index = var_index;
+
+    Syntax *syntax = malloc(sizeof(Syntax));
+    syntax->type = VARIABLE;
+    syntax->variable = variable;
+
+    return syntax;
+}
+
 Syntax *if_new(Syntax* im1,Syntax* im2, Syntax *then) {
     IfStatement *if_statement = malloc(sizeof(IfStatement));
     if_statement->immediate1 = im1;
@@ -76,10 +87,10 @@ Syntax* addition_new(Syntax *left, Syntax *right)
     return syntax;
 }
 
-Syntax* assignment_new(int var_num, Syntax* expression)
+Syntax* assignment_new(int var_index, Syntax* expression)
 {
     Assignment* assignment = malloc(sizeof(Assignment));
-    assignment->var_num = var_num;
+    assignment->var_index = var_index;
     assignment->expression = expression;
     Syntax* syntax = malloc(sizeof(Syntax));
 
