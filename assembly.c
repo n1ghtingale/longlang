@@ -125,16 +125,39 @@ void write_syntax(FILE *out, Syntax *syntax){
 	    }
 	} 
 	else if (syntax->type == IF_STATEMENT){
-		char *label;
-		printf("case if statement kaa");
-		write_syntax(out, syntax->if_statement->condition);
-		emit_instr(out, "test", "%eax, %eax");
-		label = gen_label("LC");
-		emit_instr_format(out, "jne", "%s", label);
-		write_syntax(out, syntax->if_statement->then);
-		emit_label(out, label);
-		//emit_instr(out, "call", "_printf");
-	}else if (syntax->type == INPUT) {
+	    char *label;
+	    printf("case if statement kaa");
+	    write_syntax(out, syntax->if_statement->condition);
+	    emit_instr(out, "test", "%eax, %eax");
+	    label = gen_label("LC");
+	    emit_instr_format(out, "jne", "%s", label);
+	    write_syntax(out, syntax->if_statement->then);
+	    emit_label(out, label);
+	    //emit_instr(out, "call", "_printf");
+	} else if (syntax->type ==  FOR_STATEMENT) {
+	    char *start_label;
+	    char *end_label;
+	    if(syntax->for_statement->startNum->type == IMMEDIATE){
+	    	emit_instr_format(out, "mov", "$%d, %%edi", syntax->for_statement->startNum->immediate->value);
+	    } else if (syntax->for_statement->startNum->type == VARIABLE) {
+	    	emit_instr_format(out, "mov", "-%d(%%ebp), %%edi", 4*(syntax->for_statement->startNum->variable->var_index+1));
+	    }
+	    if(syntax->for_statement->stopNum->type == IMMEDIATE){
+	    	emit_instr_format(out, "mov", "$%d, %%esi", syntax->for_statement->stopNum->immediate->value);
+	    } else if (syntax->for_statement->stopNum->type == VARIABLE) {
+                emit_instr_format(out, "mov", "-%d(%%ebp), %%esi", 4*(syntax->for_statement->stopNum->variable->var_index+1));
+	    }
+	    start_label = gen_label("LC");
+	    end_label = gen_label("LC");
+	    emit_label(out, start_label);
+	    emit_instr(out, "cmp", "%edi, %esi");
+	    //confuse which jump condition to use.
+	    emit_instr_format(out, "jg", "%s", end_label);
+	    write_syntax(out, syntax->for_statement->expression);
+	    emit_instr(out, "inc", "%esi");
+	    emit_instr_format(out, "jmp", "%s", start_label);
+	    emit_label(out, end_label);
+	} else if (syntax->type == INPUT) {
 	    //printf("gen INPUT\n");
 	    List *lines = syntax->input->lines;
 	    int i;

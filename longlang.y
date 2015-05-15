@@ -52,7 +52,6 @@ STMT : LINE NEWL {
  	}
 	| IFSTMT NEWL {
 	    printf("case IF\n");
-	    printf("case line\n");
  	    Syntax *input_syntax;
  	    Syntax *line;
  	    line = (Syntax *) stack_pop(s);
@@ -74,6 +73,24 @@ STMT : LINE NEWL {
 	}
 	| FORSTMT NEWL {
 	    printf("case FOR\n");
+ 	    Syntax *input_syntax;
+ 	    Syntax *line;
+ 	    line = (Syntax *) stack_pop(s);
+ 	    
+ 	    if(stack_empty(s)){
+ 	    	printf("empty stack\n");
+ 	    	input_syntax = (Syntax *) input_new(list_new());
+ 	    }
+            else if (((Syntax *) stack_peek(s))->type == INPUT) {
+            	printf("top isn't input\n");
+            	input_syntax = (Syntax *) stack_pop(s);
+            } else {
+            	printf("line error\n");
+            }
+            printf("input_syntax->type%d\n", input_syntax->type);
+            printf("line->type: %d\n", line->type);
+            list_push(input_syntax->input->lines, line);
+            stack_push(s, input_syntax);
 	};
 
 //we look these grammar together
@@ -114,11 +131,14 @@ IFSTMT :  IF '(' CONST EQL CONST ')' LINE {
 	    if_syntax =  (Syntax *) if_new(cond, then);
 	    stack_push(s,if_syntax);
 	};
-FORSTMT : FOR '(' NUM TO NUM ')' LINE {
+FORSTMT : FOR '(' CONST TO CONST ')' LINE {
 	    printf("case for\n");
+	    //printf("stack size: %d", s->size);
 	    Syntax *to_do = (Syntax*)stack_pop(s);
 	    Syntax *stop_num = (Syntax*)stack_pop(s);
 	    Syntax *start_num = (Syntax*)stack_pop(s);
+	    //printf("stop num: %d", stop_num->immediate->value);
+	    //printf("start num: %d", start_num->immediate->value);
 	    Syntax *for_push = (Syntax*) for_new(start_num,stop_num,to_do);
 	    stack_push(s,for_push);
 	};
