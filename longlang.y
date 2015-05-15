@@ -1,76 +1,74 @@
+%{
+  #include <math.h>
+  #include <stdio.h>
+  #include "syntax.h"
+  #include "stack.h"
 
-	%{
-	  #include <math.h>
-	  #include <stdio.h>
-	  #include "syntax.h"
-	  #include "stack.h"
+  
+  int variable[26];
 
-	  
-	  int variable[26];
-
-	  #include "assembly.h"
-
-
-	  Stack *s;
-	  void yyerror (char const *);
-	  void printExpression(Syntax *);
-	  void print(Stack *stackPtr);
-	%}
-
-	// declare token
-	/* Bison declarations.  */
-	//%define api.value.type {long long} // change double to long long 
-	%define api.value.type 
-	%token NEWL SHOW SHOWH VAR TO EQL FOR IF NUM WRONG
-	%left '-' '+' // left association (reduce left first)
-	%left '*' '/' '%' // \ is control character 
-	// deepest is the most important 
+  #include "assembly.h"
 
 
-	%% /* The grammar follows.  */
-	STMT : %empty | LINE NEWL | IFSTMT NEWL | FORSTMT | EXP;
+  Stack *s;
+  void yyerror (char const *);
+  void printExpression(Syntax *);
+  void print(Stack *stackPtr);
+%}
 
-	//we look these grammar together
-	LINE : NEWL 
-		| VAR '=' EXP  {
-				printf("case assignment\n");
-			Syntax *exp_to_push = (Syntax *) stack_pop(s);
-			Syntax *ass_to_push = (Syntax*)assignment_new($1, exp_to_push);
-		    stack_push(s, ass_to_push);
-		}
-		| SHOW VAR {
-			// keep index
-				printf("case show\n");
-			Syntax *tmp_var = (Syntax *) stack_pop(s);
-			Syntax *show_to_push = (Syntax*) show_new('d',tmp_var);
-			stack_push(s, show_to_push);
-		}
-		| SHOWH VAR {
-				printf("case showH\n");
-			// keep index
-			Syntax *tmp_var = (Syntax *) stack_pop(s);
-			Syntax *show_to_push = (Syntax*) show_new('h',tmp_var);
-			stack_push(s, show_to_push);
-		} 
-		
-	;
+// declare token
+/* Bison declarations.  */
+//%define api.value.type {long long} // change double to long long 
+%token NEWL SHOW SHOWH VAR TO EQL FOR IF NUM WRONG
+%left '-' '+' // left association (reduce left first)
+%left '*' '/' '%' // \ is control character 
+// deepest is the most important 
 
-	IFSTMT :  IF '(' CONST EQL CONST ')' LINE {
-			printf("case if\n");
-		Syntax *then = (Syntax *) stack_pop(s);
-		Syntax *tmp_syntax2 = (Syntax*)stack_pop(s);
-		Syntax *tmp_syntax1 = (Syntax*)stack_pop(s);
-		Syntax *tmp_syntax_push = (Syntax*) if_new(tmp_syntax1,tmp_syntax2,then);
-		stack_push(s, tmp_syntax_push);
+
+%% /* The grammar follows.  */
+STMT :  %empty | LINE NEWL | IFSTMT NEWL | FORSTMT | EXP | NEWL;
+
+//we look these grammar together
+LINE :	VAR '=' EXP  {
+	    printf("case assignment\n");
+	    Syntax *exp_to_push = (Syntax *) stack_pop(s);
+	    Syntax *ass_to_push = (Syntax*)assignment_new($1, exp_to_push);
+	    stack_push(s, ass_to_push);
+	}
+	| SHOW VAR {
+		// keep index
+	    printf("case show\n");
+	    Syntax *tmp_var = (Syntax *) stack_pop(s);
+	    Syntax *show_to_push = (Syntax*) show_new('d',tmp_var);
+	    stack_push(s, show_to_push);
+	}
+	| SHOWH VAR {
+	    printf("case showH\n");
+	    // keep index
+	    Syntax *tmp_var = (Syntax *) stack_pop(s);
+	    Syntax *show_to_push = (Syntax*) show_new('h',tmp_var);
+	    stack_push(s, show_to_push);
+	} 
+	
+;
+
+IFSTMT :  IF '(' CONST EQL CONST ')' LINE {
+	    printf("case if\n");
+	    Syntax *then = (Syntax *) stack_pop(s);
+	    Syntax *tmp_syntax2 = (Syntax*)stack_pop(s);
+	    Syntax *tmp_syntax1 = (Syntax*)stack_pop(s);
+	    Syntax *tmp_syntax_push = (Syntax*) if_new(tmp_syntax1,tmp_syntax2,then);
+	    stack_push(s, tmp_syntax_push);
 	};
-	FORSTMT : FOR '(' NUM TO NUM ')' LINE {
-			printf("case for\n");
-		Syntax *to_do = (Syntax*)stack_pop(s);
-		Syntax *stop_num = (Syntax*)stack_pop(s);
-		Syntax *start_num = (Syntax*)stack_pop(s);
-		Syntax *for_push = (Syntax*) for_new(start_num,stop_num,to_do);
-		stack_push(s,for_push);
+FORSTMT : FOR '(' NUM TO NUM ')' LINE {
+	    printf("case for\n");
+	    Syntax *to_do = (Syntax*)stack_pop(s);
+	    Syntax *stop_num = (Syntax*)stack_pop(s);
+	    Syntax *start_num = (Syntax*)stack_pop(s);
+	    Syntax *for_push = (Syntax*) for_new(start_num,stop_num,to_do);
+	    stack_push(s,for_push);
 	};
+
 	EXP : CONST {
 
 	        }
@@ -174,7 +172,7 @@ void print(Stack *stackPtr){
 				break;
 
 			case ASSIGNMENT:
-				printf("%d",synNow->assignment->var_num);
+				printf("%d",synNow->assignment->var_index);
 				printf("=");
 
 				break;
@@ -205,7 +203,7 @@ void printExpression(Syntax *ss){
 				break;
 
 			case ASSIGNMENT:
-				printf("%d",ss->assignment->var_num);
+				printf("%d",ss->assignment->var_index);
 				printf("=");
 
 				break;

@@ -42,17 +42,23 @@ void emit_instr(FILE *out, char *instr, char *operands) {
 }
 
 void write_header(FILE *out){
-	emit_header(out, ".section .text\n.global _start\n_start:");
+	emit_header(out, ".data\nLC0:    .ascii \"%d\\n\\0\"\nLC1:    .ascii \"%x\\n\\0\"\n.text\n    .global _main\n_main:\n");
+    	emit_instr(out, "pushl", "%ebp");
+    	emit_instr(out, "movl", "%esp, %ebp");
+	emit_instr(out, "sub", "$104, %esp");
 }
 
 void write_footer(FILE *out){
 	emit_instr(out, "pushl", "%eax");
-	emit_instr(out, "call", "_ExitProcess@4");
+	emit_instr(out, "leave", "");
+	emit_instr(out, "ret", "");
 }
 
 void write_syntax(FILE *out, Syntax *syntax){
 	if(syntax->type == IMMEDIATE){
-		emit_instr_format(out, "mov", "$%d, %%eax", syntax->immediate->value);
+	    emit_instr_format(out, "mov", "$%d, %%eax", syntax->immediate->value);
+	} else if (syntax->type == VARIABLE) {
+            emit_instr_format(out, "mov", "-%%d(%ebp), %eax", 4*(syntax->variable->var_index+1));
 	} else if (syntax->type == BINARY_OPERATOR){
 		BinaryExpression *binary_syntax = syntax->binary_expression;
 		//reserve space for temporary 
@@ -67,6 +73,20 @@ void write_syntax(FILE *out, Syntax *syntax){
 		    emit_instr(out, "mull", "0(%esp)");
 		    //emit_instr(out, "mull", "%ebx");
 		    emit_instr(out, "add", "$4, %esp");
+		} else if (binary_syntax->binary_type == DIVISION) {
+		    //edx:eax / 0(%esp)
+	            emit_instr(out, "mov", "$0, %edx");
+	            emit_instr(out, "xchg", "0(%esp), %eax");
+	            emit_instr(out, "divl", "0(%esp)");
+
+		    emit_instr(out, "add", "$4, %esp");
+		} else if (binary_syntax->binary_type == MOD) {
+		    emit_instr(out, "mov", "$0, %edx");
+	            emit_instr(out, "xchg", "0(%esp), %eax");
+	            emit_instr(out, "divl", "0(%esp)");
+	            emit_instr(out, "mov", "%edx, %eax");
+
+		    emit_instr(out, "add", "$4, %esp");
 		} else if (binary_syntax->binary_type == ADDITION){
 		    emit_instr(out, "add", "0(%esp), %eax");
 		    //emit_instr(out, "add", "%ebx, %eax");
@@ -77,6 +97,18 @@ void write_syntax(FILE *out, Syntax *syntax){
             	    emit_instr(out, "mov", "0(%esp), %eax");
 		    emit_instr(out, "add", "$4, %esp");
 		}
+	} else if (syntax->type == ASSIGNMENT) {
+	    write_syntax(out, syntax->assignment->expression);
+
+	    emit_instr_format(out, "mov", "%%eax, -%d(%%ebp)", 4*(syntax->assignment->var_index+1));
+	} else if (syntax->type = SHOW_STATEMENT){
+	    if(syntax->show_statement->decOrHex == 'd'){
+	    	emit_instr_format(out, "pushl", "%%eax, -%d(%%ebp)", 4*(syntax->show_statement->var->variable->var_index+1));
+	    	emit_instr(out, "pushl", "$format");
+        	emit_instr(out, "call", "_printf");
+	    } else if (syntax->show_statement->decOrHex == 'h') {
+
+	    }
 	}
 }
 

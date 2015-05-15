@@ -4,6 +4,7 @@
 typedef enum
 {
     IMMEDIATE,
+    VARIABLE,
     BINARY_OPERATOR,
     ASSIGNMENT,
     IF_STATEMENT,
@@ -17,13 +18,17 @@ typedef struct Immediate {
     int value; 
 } Immediate;
 
+typedef struct Variable {
+  int var_index;
+} Variable;
+
 typedef enum
 {
     ADDITION,
     SUBTRACTION,
     MULTIPLICATION,
     DIVISION,
-    MOD,
+    MOD
 } BinaryExpressionType;
 
 typedef struct Syntax Syntax;
@@ -37,7 +42,7 @@ typedef struct BinaryExpression
 
 typedef struct Assignment
 {
-    int var_num;
+    int var_index;
     Syntax* expression;
 } Assignment;
 
@@ -73,6 +78,7 @@ struct Syntax
         ShowStatement *show_statement;
         Minus *minus;
         ForStatement* for_statement;
+        Variable *variable;
     };
 };  
 
