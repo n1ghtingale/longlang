@@ -29,14 +29,24 @@
 
 %% /* The grammar follows.  */
 input: | STMT input;
-STMT : LINE NEWL {printf("case multiple line\n");
+STMT : LINE NEWL {
+	    printf("case line\n");
  	    Syntax *input_syntax;
- 	    Syntax *line = (Syntax *) stack_pop(s);
-            if (((Syntax *)stack_peek(s))->type != INPUT) {
-                input_syntax = input_new(list_new());
+ 	    Syntax *line;
+ 	    line = (Syntax *) stack_pop(s);
+ 	    
+ 	    if(stack_empty(s)){
+ 	    	printf("empty stack\n");
+ 	    	input_syntax = (Syntax *) input_new(list_new());
+ 	    }
+            else if (((Syntax *) stack_peek(s))->type == INPUT) {
+            	printf("top isn't input\n");
+            	input_syntax = (Syntax *) stack_pop(s);
             } else {
-                input_syntax = stack_pop(s);
+            	printf("line error\n");
             }
+            printf("input_syntax->type%d\n", input_syntax->type);
+            printf("line->type: %d\n", line->type);
             list_push(input_syntax->input->lines, line);
             stack_push(s, input_syntax);
  	}
@@ -53,8 +63,8 @@ LINE :	VAR '=' EXP {
 	| SHOW VAR {
 		// keep index
 	    printf("case show\n");
-	    Syntax *tmp_var = (Syntax *) stack_pop(s);
-	    Syntax *show_to_push = (Syntax*) show_new('d',tmp_var);
+	    Syntax *tmp_var = (Syntax*) variable_new($2);
+	    Syntax *show_to_push = (Syntax*) show_new('d', tmp_var);
 	    stack_push(s, show_to_push);
 	}
 	| SHOWH VAR {
