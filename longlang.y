@@ -13,6 +13,7 @@
 
 
   Stack *s;
+  extern FILE *yyin;
   void yyerror (char const *);
   void printExpression(Syntax *);
   void print(Stack *stackPtr);
@@ -297,10 +298,18 @@ void printExpression(Syntax *ss){
 }
 
  
-void main(){
-	printf(">hello longlang>\n");
-	s = stack_new();
+void main(int argc, const char *argv[]){
+    printf("%s\n", argv[1]);
+    yyin = fopen(argv[1], "r");
+
+    if(yyin == NULL){
+        printf("invalid input file\n");
+        exit(1);
+    }
+    s = stack_new();
+    //do {
 	yyparse();
-	//print(s);
-	write_assembly((Syntax *) stack_pop(s));
+     //} while (!feof(yyin));
+    //print(s);
+    write_assembly((Syntax *) stack_pop(s));
 }
