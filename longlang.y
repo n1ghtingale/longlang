@@ -2,6 +2,7 @@
 %{
   #include <math.h>
   #include <stdio.h>
+  #include <stdlib.h>
   #include "syntax.h"
   #include "stack.h"
 
@@ -44,6 +45,7 @@ STMT : LINE NEWL {
             	input_syntax = (Syntax *) stack_pop(s);
             } else {
             	printf("line error\n");
+            	exit(1);
             }
             printf("input_syntax->type%d\n", input_syntax->type);
             printf("line->type: %d\n", line->type);
@@ -64,7 +66,8 @@ STMT : LINE NEWL {
             	printf("top isn't input\n");
             	input_syntax = (Syntax *) stack_pop(s);
             } else {
-            	printf("line error\n");
+            	printf("if statement error\n");
+            	exit(1);
             }
             printf("input_syntax->type%d\n", input_syntax->type);
             printf("line->type: %d\n", line->type);
@@ -85,13 +88,18 @@ STMT : LINE NEWL {
             	printf("top isn't input\n");
             	input_syntax = (Syntax *) stack_pop(s);
             } else {
-            	printf("line error\n");
+            	printf("for statement error\n");
+            	exit(1);
             }
             printf("input_syntax->type%d\n", input_syntax->type);
             printf("line->type: %d\n", line->type);
             list_push(input_syntax->input->lines, line);
             stack_push(s, input_syntax);
-	};
+	}| NEWL 
+	 | error NEWL {
+	       printf("SYNTAX ERROR!\n");
+	       exit(1);
+	 };
 
 //we look these grammar together
 LINE :	VAR '=' EXP {
@@ -110,7 +118,7 @@ LINE :	VAR '=' EXP {
 	| SHOWH VAR {
 	    printf("case showH\n");
 	    // keep index
-	    Syntax *tmp_var = (Syntax *) stack_pop(s);
+	    Syntax *tmp_var = (Syntax *) variable_new($2);
 	    Syntax *show_to_push = (Syntax*) show_new('h',tmp_var);
 	    stack_push(s, show_to_push);
 	} 
@@ -290,17 +298,9 @@ void printExpression(Syntax *ss){
 
  
 void main(){
-	Syntax *test_bug;
-	
 	printf(">hello longlang>\n");
 	s = stack_new();
 	yyparse();
 	//print(s);
-	test_bug = (Syntax *) stack_pop(s);
-        printf("length: %d\n", list_length(test_bug->input->lines));
-        printf("type:%d \n", test_bug->type);
-        printf("length: %d\n", list_length(test_bug->input->lines));
-        printf("type:%d \n", test_bug->type);
-        stack_push(s, test_bug);
 	write_assembly((Syntax *) stack_pop(s));
 }

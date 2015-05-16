@@ -51,7 +51,7 @@
 [)]	{return ')';}
 
 
-[0-9A-Fa-f]+h 	{yylval = strtol(yytext,NULL,16); return NUM;}
+[0-9A-Fa-f]+h 	{yylval = strtol(yytext,NULL,16); printf("%x", yylval); return NUM;}
 [0-9]+ 	{yylval = atoi(yytext); return NUM;}
 " " 	{}
 . 	{ return WRONG; }

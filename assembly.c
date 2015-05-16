@@ -121,7 +121,9 @@ void write_syntax(FILE *out, Syntax *syntax){
 	    	emit_instr(out, "pushl", "$.LC0");
         	emit_instr(out, "call", "_printf");
 	    } else if (syntax->show_statement->decOrHex == 'h') {
-
+	    	emit_instr_format(out, "pushl", "-%d(%%ebp)", 4*(syntax->show_statement->var->variable->var_index+1));
+	    	emit_instr(out, "pushl", "$.LC1");
+        	emit_instr(out, "call", "_printf");
 	    }
 	} 
 	else if (syntax->type == IF_STATEMENT){
@@ -165,6 +167,12 @@ void write_syntax(FILE *out, Syntax *syntax){
             	//printf("*");
                 write_syntax(out, list_get(lines, i));
             }
+	} else if(syntax->type = MINUS){
+		printf("gen minus\n");
+		write_syntax(out,syntax->minus->expression);
+		emit_instr(out, "xor", "%ebx, %ebx");
+		emit_instr(out, "sub", "%eax, %ebx");
+		emit_instr(out, "mov", "%ebx, %eax");
 	} else {
 	    printf("last case\n");
 	}
