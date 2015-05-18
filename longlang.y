@@ -307,9 +307,9 @@ void main(int argc, const char *argv[]){
         exit(1);
     }
     s = stack_new();
-    //do {
+    do {
 	yyparse();
-     //} while (!feof(yyin));
+      while (!feof(yyin));
     //print(s);
     write_assembly((Syntax *) stack_pop(s));
 }
