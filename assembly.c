@@ -52,7 +52,7 @@ void write_header(FILE *out){
 }
 
 void write_footer(FILE *out){
-	emit_instr(out, "pushl", "%eax");
+	emit_instr(out, "pushl", "$0");
 	emit_instr(out, "leave", "");
 	emit_instr(out, "ret", "");
 }
